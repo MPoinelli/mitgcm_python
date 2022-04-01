@@ -1,4 +1,4 @@
-# mitgcm_python
+# mitgcm_routines
 Repo for python/matlab routines to work with MITgcm
 
 
