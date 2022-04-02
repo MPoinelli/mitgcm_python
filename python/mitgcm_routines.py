@@ -1,103 +1,100 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Dec  3 13:47:56 2021
+Created on Tue Mar  8 09:48:24 2022
 
 @author: mpoinell
 
-Handy routines to work with MITgcm outputs
-
 """
+
 import pandas as pd
 
-class STDOUTtoDF:
+def GenMonitorDiagnostics():
     """
-        This class takes a STDOUT file and generates a pandas Dataframe
+    Write MonitorDiagnostics.txt based on a specific STDOUT file
+
+    Returns
+    -------
+    None.
+
     """
     
-    def __init__(self,PATH):
-        """
-        Class constructor to initialize PATH to STDOUT directory
-        """
-        assert type(PATH) == str, 'PATH is not a string'
-        assert 'STDOUT' in PATH, 'PATH does not lead to STDOUT file'
+    PATH = '/nobackupp11/mpoinell/larsen/run_larsen00e/output/'
 
-        self.PATH = PATH
+    with open(PATH + 'STDOUT.437760','r') as std_file:
+        column = []    
+    
+        for line_number, line in enumerate(std_file.readlines()):
         
-    
-    def getPATH(self):
-        """
-        Returns PATH to STDOUT
-        """
-        return self.PATH
-    
-    def diagnosticsList(self):
-        
-        column = list()
-        with open('monitor_diagnostics.txt','r') as std_var:
-            for line in std_var.readlines():
-                column.append(line.rstrip())
-    
-        return column
-    
-    def createDF(self):
-        
-        # Load column name
-        diagnostics = self.diagnosticsList()
+            # generate dataframe columns
+            if (line_number > 4045 and line_number < 4277) and \
+                (line[25:27] != '==' and line[25:27] != 'd ' and line[25:27] != 'gi'):
+                    column.append(line[25:45].rstrip())
+            
+        with open('MonitorDiagnostics.txt','w') as std_var:
+            for variable in column:
+                std_var.write(variable + '\n') 
 
-        # initialize support dictionary     
-        new_index = list()
-        new_value = list()
-        
-        dictionary_STDOUT = dict()
-        with open(self.PATH,'r') as std_file:
+
+def diagnosticsList():
+    """
+    Routine to read MonitorDiagnostics.txt
+
+    Returns
+    -------
+    column : list of diagnostics to monitor
+    """
     
-            for line in std_file.readlines():
-                # read and append values that are referring to monitored diagnostics
-                
+    # set the path to MonitorDiagnostics.txt, created with genmonitorDiagnostics
+    MonitorDiagnostics = '/nobackupp11/mpoinell/larsen/python/MonitorDiagnostics.txt'
+    
+    # Initialize empy list
+    diagnostics_list = list()
+    
+    with open(MonitorDiagnostics,'r') as std_var:
+        
+        # read line and append it to 
+        for line in std_var.readlines():
+            diagnostics_list.append(line.rstrip())
+    
+    return diagnostics_list
+
+
+
+    
+def createDFfrommultipleSTD(*files):
+    
+    
+    diagnostics = diagnosticsList()
+    
+    dictionary_STDOUT = dict()
+        
+
+    for file in files:    
+        print('Open file!')
+        with open(file, 'r') as std_file:
+            
+            new_diags = list()
+            new_value = list()
+            
+            print('Read line!')
+            for line in std_file.readlines():                
+            
                 if line[25:45].rstrip() in diagnostics:
                     try:
                         new_value.append(float(line[-20:].strip())) 
-                        new_index.append(line[25:45].rstrip())
+                        new_diags.append(line[25:45].rstrip())
                     except(ValueError, IndexError):
                         new_value.append(float('nan')) 
-                        new_index.append(line[25:45].rstrip())
-            
+                        new_diags.append(line[25:45].rstrip())
+                            
             # build support dictionary
-            for key, value in zip(new_index, new_value):
+            print('Gen Dictionary!')
+            for key, value in zip(new_diags, new_value):
                 if key not in dictionary_STDOUT:
                     dictionary_STDOUT[key] = [value]
                 else:
-                   dictionary_STDOUT[key].append(value)
-        
-        # returns dataframe 
-        return pd.DataFrame(dictionary_STDOUT)
+                    dictionary_STDOUT[key].append(value)
     
-    def createDFfrommultipleSTD(self,*files):
-        
-        diagnostics = self.diagnosticsList()
-        dictionary_STDOUT = dict()
-        
-        for file in files:
-            with open(file, 'r') as std_file:
-                new_index = list()
-                new_value = list()
-                
-                for line in std_file.readlines():
-                    if line[25:45].rstrip() in diagnostics:
-                        try:
-                            new_value.append(float(line[-20:].strip())) 
-                            new_index.append(line[25:45].rstrip())
-                        except(ValueError, IndexError):
-                            new_value.append(float('nan')) 
-                            new_index.append(line[25:45].rstrip())
-                            
-                # build support dictionary
-                for key, value in zip(new_index, new_value):
-                    if key not in dictionary_STDOUT:
-                        dictionary_STDOUT[key] = [value]
-                    else:
-                        dictionary_STDOUT[key].append(value)
-                        
-        # returns dataframe 
-        return pd.DataFrame(dictionary_STDOUT)
+    # returns dataframe 
+    return dictionary_STDOUT
