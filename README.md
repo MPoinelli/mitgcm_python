@@ -1,5 +1,5 @@
 # mitgcm_routines
-Repo for python/matlab routines to work with MITgcm
+Repo for python/matlab routines to work with MITgcm input/output
 
 
 Mattia Poinelli
