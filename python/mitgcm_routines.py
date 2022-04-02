@@ -8,7 +8,6 @@ Created on Tue Mar  8 09:48:24 2022
 """
 
 import pandas as pd
-
 from matplotlib import pyplot as plt
 
 def GenMonitorDiagnostics():
@@ -133,46 +132,54 @@ def MonitorSTDOUT(file, n=None):
     # plt.plot(df_STDOUT["time_secondsf"],df_STDOUT["dynstat_uvel_max"])
 
     
-    plt.figure(1,figsize=(6,6))
+    ## Velocities
+    fig1, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
 
-    plt.subplot(3,1,1)
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_uvel_min"][-n:])
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_uvel_max"][-n:])
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_uvel_mean"][-n:])
+    ax1.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_uvel_min"][-n:])
+    ax1.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_uvel_max"][-n:])
+    ax1.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_uvel_mean"][-n:])
     
-    plt.xlabel("time_secondsf")
-    plt.ylabel("dynstat_uvel")
+    ax1.set(ylabel="dynstat_uvel")
         
-    plt.subplot(3,1,2)
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_vvel_min"][-n:])
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_vvel_max"][-n:])
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_vvel_mean"][-n:])
+    ax2.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_vvel_min"][-n:])
+    ax2.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_vvel_max"][-n:])
+    ax2.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_vvel_mean"][-n:])
 
-    plt.xlabel("time_secondsf")
-    plt.ylabel("dynstat_vvel")
-
-    plt.subplot(3,1,3)
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_wvel_min"][-n:])
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_wvel_max"][-n:])
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_wvel_mean"][-n:])
+    ax2.set(ylabel="dynstat_uvel")
     
+    ax3.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_wvel_min"][-n:])
+    ax3.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_wvel_max"][-n:])
+    ax3.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_wvel_mean"][-n:])
     
-    plt.figure(2,figsize=(6,6)) 
+    ax3.set(xlabel='time_secondsf', ylabel="dynstat_wvel")
 
-    plt.subplot(2,1,1)
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_theta_min"][-n:])
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_theta_max"][-n:])
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_theta_mean"][-n:])
+    
+    ## CFL condition
+    fig2, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
 
-    plt.xlabel("time_secondsf")
-    plt.ylabel("dynstat_theta")
+    ax1.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["advcfl_uvel_max"][-n:])
+    ax1.set(ylabel="advcfl_uvel")
+        
+    ax2.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["advcfl_vvel_max"][-n:])
+    ax2.set(ylabel="advcfl_uvel")
+    
+    ax3.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["advcfl_wvel_max"][-n:])
+    ax3.set(xlabel='time_secondsf', ylabel="advcfl_wvel")
 
-    plt.subplot(2,1,2)
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_salt_min"][-n:])
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_salt_max"][-n:])
-    plt.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_salt_mean"][-n:])
+    
+    ## Temp/SALINITY
+    fig3, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
 
-    plt.xlabel("time_secondsf")
-    plt.ylabel("dynstat_salt")
+    ax1.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_theta_min"][-n:])
+    ax1.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_theta_max"][-n:])
+    ax1.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_theta_mean"][-n:])
+    
+    ax1.set(ylabel="dynstat_theta")
+        
+    ax2.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_salt_min"][-n:])
+    ax2.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_salt_max"][-n:])
+    ax2.plot(df_STDOUT["time_secondsf"][-n:], df_STDOUT["dynstat_salt_mean"][-n:])
+    
+    ax2.set(xlabel='time_secondsf', ylabel="dynstat_salt")
                 
         
