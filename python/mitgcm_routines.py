@@ -82,6 +82,7 @@ def createDFfrommultipleSTD(*files):
 
     for file in files:    
         print('Open file!')
+        
         with open(file, 'r') as std_file:
             
             new_diags = list()
@@ -98,9 +99,12 @@ def createDFfrommultipleSTD(*files):
                         new_value.append(float('nan')) 
                         new_diags.append(line[25:45].rstrip())
                             
+            # Find smaller list
+            n = min(len(new_value),len(new_diags))
+            
             # build support dictionary
             print('Gen Dictionary!')
-            for key, value in zip(new_diags, new_value):
+            for key, value in zip(new_diags[:n+1], new_value[:n+1]):
                 if key not in dictionary_STDOUT:
                     dictionary_STDOUT[key] = [value]
                 else:
