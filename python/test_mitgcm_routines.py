@@ -7,5 +7,18 @@ Created on Tue Apr 12 17:58:58 2022
 """
 
 
-def createDFfrommultipleSTD():
+def test_GenMonitorDiagnostics():
+    #assert(GenMonitorDiagnostics)==?
+    pass
+
+def test_diagnosticsList():
+    #assert(diagnosticsList)==?
+    pass
+
+def test_createDFfrommultipleSTD():
+    #assert(createDFfrommultipleSTD)==?
+    pass
+
+def test_MonitorSTDOUT():
+    #assert(MonitorSTDOUT)==?
     pass
