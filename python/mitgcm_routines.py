@@ -102,9 +102,8 @@ def createDFfrommultipleSTD(*files):
                 else:
                     dictionary_STDOUT[key].append(value)
     
-    # returns dataframe
+    return pd.DataFrame({ key:pd.Series(value) for key, value in dictionary_STDOUT.items() })
     
-    return pd.DataFrame(dictionary_STDOUT)
 
 def MonitorSTDOUT(file, n=None):
     """

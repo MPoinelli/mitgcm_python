@@ -10,5 +10,5 @@ import mitgcm_routines
 
 
 file = 'tests/STDOUT.0000'
-#df_STDOUT = mitgcm_routines.createDFfrommultipleSTD(file)
+#dictionary = mitgcm_routines.createDFfrommultipleSTD(file)
 mitgcm_routines.MonitorSTDOUT(file)
