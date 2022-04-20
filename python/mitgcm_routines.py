@@ -177,4 +177,6 @@ def MonitorSTDOUT(file, n=None):
     
     ax2.set(xlabel='time_secondsf', ylabel="dynstat_salt")
                 
-        
+if __name__ == "__main__":
+    import sys
+    mitgcm_routines(int(sys.argv[1]))      
