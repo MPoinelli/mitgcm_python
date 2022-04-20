@@ -71,18 +71,23 @@ def createDFfrommultipleSTD(*files):
     
     dictionary_STDOUT = dict()
         
-
+    counter = 0 
+    
     for file in files:    
-        print('Open file!')
+        counter += 1
+        print('Reading file ' + str(counter) + '/' + str(len(files)))
         
+        # Open STDOUT file
         with open(file, 'r') as std_file:
             
+            # support arrays
             new_diags = list()
             new_value = list()
             
-            print('Read line!')
+            # Read line by line
             for line in std_file.readlines():                
-            
+                
+                # Store diagnostic and its associate value
                 if line[25:45].rstrip() in diagnostics:
                     try:
                         new_value.append(float(line[57:].strip())) 
@@ -91,22 +96,22 @@ def createDFfrommultipleSTD(*files):
                         new_value.append(float('nan')) 
                         new_diags.append(line[25:45].rstrip())
                             
-            # Find smaller list
+            # Find smaller list (obsolete, to be removed and tested)
             n = min(len(new_value),len(new_diags))
             
-            # build support dictionary
-            print('Gen Dictionary!')
+            # Build support dictionary
             for key, value in zip(new_diags[:n+1], new_value[:n+1]):
                 if key not in dictionary_STDOUT:
                     dictionary_STDOUT[key] = [value]
                 else:
                     dictionary_STDOUT[key].append(value)
     
-    # create dataframe so with equal column 
+    # Create dataframe so with equal column 
     df = pd.DataFrame({ key:pd.Series(value) for key, value in dictionary_STDOUT.items() })
     
     # remove duplicates and keep last value encountered (most recent file)
     df = df.drop_duplicates(subset='time_tsnumber', keep='last')
+    print('DataFrame created')
     return df
 
 def MonitorSTDOUT(file, n=None):
