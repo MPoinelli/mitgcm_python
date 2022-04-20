@@ -63,13 +63,13 @@ def createDFfrommultipleSTD(*files):
 
     Returns
     -------
-    dictionary_STDOUT : pandas dataframe containing diagnostics time series.
+    df : pandas dataframe containing diagnostics time series.
 
     """
     
     diagnostics = diagnosticsList()
     
-    dictionary_STDOUT = dict()
+    hash_table = {}
         
     counter = 0 
     
@@ -99,15 +99,15 @@ def createDFfrommultipleSTD(*files):
             # Find smaller list (obsolete, to be removed and tested)
             n = min(len(new_value),len(new_diags))
             
-            # Build support dictionary
+            # Build support hash
             for key, value in zip(new_diags[:n+1], new_value[:n+1]):
-                if key not in dictionary_STDOUT:
-                    dictionary_STDOUT[key] = [value]
+                if key not in hash_table:
+                    hash_table[key] = [value]
                 else:
-                    dictionary_STDOUT[key].append(value)
+                    hash_table[key].append(value)
     
     # Create dataframe so with equal column 
-    df = pd.DataFrame({ key:pd.Series(value) for key, value in dictionary_STDOUT.items() })
+    df = pd.DataFrame({ key:pd.Series(value) for key, value in hash_table.items() })
     
     # remove duplicates and keep last value encountered (most recent file)
     df = df.drop_duplicates(subset='time_tsnumber', keep='last')
