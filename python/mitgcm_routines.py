@@ -102,8 +102,12 @@ def createDFfrommultipleSTD(*files):
                 else:
                     dictionary_STDOUT[key].append(value)
     
-    return pd.DataFrame({ key:pd.Series(value) for key, value in dictionary_STDOUT.items() })
+    # create dataframe so with equal column 
+    df = pd.DataFrame({ key:pd.Series(value) for key, value in dictionary_STDOUT.items() })
     
+    # remove duplicates and keep last value encountered (most recent file)
+    df = df.drop_duplicates(subset='time_tsnumber', keep='last')
+    return df
 
 def MonitorSTDOUT(file, n=None):
     """
